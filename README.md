@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <img src="assets/logo.svg" width="30px" alt="weAgentSlim">
+  <img src="assets/logo.svg" width="50px" alt="weAgentSlim">
 </h1>
 
 <h4 align="center">一个侧重隐私安全，基于opencode的微信接入框架和学习模板，适配文本、语音、图片、表情包、视频和位置消息接收，文本和文件消息推送。</h4>
@@ -13,7 +13,7 @@
   <a href="#长期记忆">长期记忆</a> •
   <a href="#效果展示">效果展示</a> •
   <a href="#免责声明">免责声明</a> •
-  <a href="#LICENSE">LICENSE</a>
+  <a href="#参考链接">参考链接</a>
 </p>
 
 ---
@@ -82,20 +82,22 @@ docker build -t opencode .
 
 
 ## 效果展示
-<div style="display: flex; gap: 16px;">
-<div align="center" style="flex: 1;">
-<h5>图片/表情包输入</h5>
-<img src="assets/image_input.jpg" width="80px" alt="image_input">
-</div>
-<div align="center" style="flex: 1;">
-<h5>视频输入</h5>
-<img src="assets/video_input.jpg" width="80px" alt="video_input">
-</div>
-<div align="center" style="flex: 1;">
-<h5>语音输入+工具调用+文件推送</h5>
-<img src="assets/voice_input.jpg" width="80px" alt="voice_input">
-</div>
-</div>
+<table>
+  <tr>
+    <td width="33%" valign="top">
+      <h4>图片/表情包输入</h4>
+      <img src="assets/image_input.jpg" width="100%">
+    </td>
+    <td width="33%" valign="top">
+      <h4>视频输入</h4>
+      <img src="assets/video_input.jpg" width="100%">
+    </td>
+    <td width="33%" valign="top">
+      <h4>语音输入+工具调用+文件推送</h4>
+      <img src="assets/voice_input.jpg" width="100%">
+    </td>
+  </tr>
+</table>
 
 
 ## 免责声明
