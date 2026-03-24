@@ -1,0 +1,8 @@
+wechatpy
+tencentcloud-sdk-python-asr
+cryptography
+requests
+pysocks
+flask
+gunicorn
+gevent
