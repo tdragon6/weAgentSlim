@@ -2,6 +2,8 @@
     长期记忆，向量化嵌入和查询示例
     pip install chromadb
 '''
+
+
 from config import embed_api_base, embed_api_key, embed_model
 from chromadb import EmbeddingFunction, Documents, Embeddings, PersistentClient
 import requests

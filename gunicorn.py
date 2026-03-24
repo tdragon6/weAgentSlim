@@ -18,7 +18,7 @@ errorlog = './log/gunicorn.log'
 timeout = 0
 
 # 启动的进程数
-#workers = multiprocessing.cpu_count() * 2 + 1
+# workers = multiprocessing.cpu_count() * 2 + 1
 workers = 1
 
 # 使用gevent协程实现高并发
