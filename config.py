@@ -44,7 +44,7 @@ uri_bot_type_dict = {
 }
 
 
-# 自定义用户ID到标识的映射
+# 自定义用户ID到标识的映射，给隐私bot做白名单校验，同时映射对应用户USER.md文件
 self_user_id_dict = {
     'user_id_1': 'username_1',
     'user_id_2': 'username_2',
