@@ -120,4 +120,4 @@ docker build -t opencode .
 
 ## LICENSE
 - 本项目使用 [MIT License](https://github.com/tdragon6/weAgentSlim/blob/main/LICENSE)
-- 第三方依赖的许可证信息详见：[THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md)。
+- 第三方依赖的许可证信息详见：[THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md)
