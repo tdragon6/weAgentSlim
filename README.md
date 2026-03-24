@@ -51,7 +51,7 @@ sudo iptables -A DOCKER-USER -d `本地模型API IP` -p tcp --dport `本地模�
 docker pull tdragon6/opencode:latest
 
 # OR 本地构建镜像
-docker build -t opencode .
+docker build -t tdragon6/opencode:latest .
 ```
 7. 运行`./main.sh`即可在微信中操作你的bot
 
