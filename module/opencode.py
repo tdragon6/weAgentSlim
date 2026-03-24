@@ -69,7 +69,7 @@ def run_opencode(network, prompt_args, skills_args, storage_args, assets_args, c
     command = [
         'docker', 'run', '--rm', '--network', network
     ] + prompt_args + skills_args + storage_args + assets_args + config_args + env_args + [
-        'opencode:latest', 'run', message,
+        'tdragon6/opencode:latest', 'run', message,
         '-c', '-m', model,
         '--dir', '/root/workspace',
         '--format', 'json'
