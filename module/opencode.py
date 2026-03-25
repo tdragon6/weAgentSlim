@@ -26,7 +26,7 @@ def get_opencode_args(user_id, message, bot_type):
     
     if bot_type == "self":
         if user_id not in self_user_id_dict.keys():
-            return hint_message_dict["no_permission"]
+            return hint_message_dict["bot_no_permission"]
 
         user_file = f'USER_{self_user_id_dict[user_id]}.md'
         prompt_files += [user_file]
