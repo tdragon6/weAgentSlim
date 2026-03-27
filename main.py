@@ -4,8 +4,7 @@
 
 
 from config import wechat_config, uri_bot_type_dict
-from universe import executor, logger, hint_message_dict, supported_msg_types, user_request_limit
-from module.utils import start_clean
+from universe import executor, logger, hint_message_dict, supported_msg_types, user_request_status
 from module.handler import agent_task_handler
 from module.wechat import send_reply_message
 from flask import Flask, request
@@ -55,13 +54,10 @@ def wechat_callback():
             user_id = msg.source
 
             # 检查用户请求是否在冷却中
-            if user_id + '_' + bot_type in user_request_limit.keys() and time.time() - user_request_limit[user_id + '_' + bot_type] < 15 * 60:
+            if user_id + '_' + bot_type in user_request_status.keys() and user_request_status[user_id + '_' + bot_type]["in_progress"] and time.time() - user_request_status[user_id + '_' + bot_type]["update_time"] < 15 * 60:
                 executor.submit(send_reply_message, user_id, hint_message_dict['cool_down'], "text", bot_type)
                 logger.info(f"Message Handle Cool Down: user_id={user_id}, bot_type={bot_type}")
                 return "success"
-
-            # 清理本次会话输入输出目录，删除历史冗余信息
-            start_clean(user_id, bot_type)
             
             # 支持的类型消息处理
             if msg.type in supported_msg_types:
