@@ -44,9 +44,9 @@ def recursive_delete_except(root_dir, except_list):
                     pass
 
 
-def start_clean(user_id, bot_type):
+def user_data_clean(user_id, bot_type):
     '''
-        清理用户冗余数据
+        清理用户临时数据
     '''
     try:
         shutil.rmtree(os.path.join(root_dir, f"current_inputs/{bot_type}/{user_id}"))
