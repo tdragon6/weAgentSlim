@@ -4,7 +4,8 @@
 
 
 from config import tencent_cloud
-from universe import root_dir, logger, hint_message_dict, msg_type_dict, user_request_limit
+from universe import root_dir, logger, hint_message_dict, msg_type_dict, user_request_status, user_one_request_interval
+from module.utils import user_data_clean
 from module.task import get_agent_result, judge_media_file_size, voice_to_text
 from module.wechat import send_reply_message, download_wechat_media, upload_wechat_media
 import os
@@ -17,9 +18,17 @@ def agent_task_handler(user_id, msg, bot_type):
     '''
         agent任务入口函数
     '''
+
+    skip_finally = False
+
     try:
-        # 设置用户请求状态
-        user_request_limit[user_id + '_' + bot_type] = time.time()
+        # 初始化用户请求状态
+        if user_id + '_' + bot_type not in user_request_status.keys():
+            user_request_status[user_id + '_' + bot_type] = {
+                "message": "",
+                "in_progress": False,
+                "update_time": 0
+            }
 
         message = ""
         
@@ -68,8 +77,22 @@ def agent_task_handler(user_id, msg, bot_type):
                     logger.info(f"Media Download Failed: user_id={user_id}, bot_type={bot_type}, msg_type={msg.type}, media_id={media_id}")
                     return
         
+        # 更新用户请求状态
+        message = user_request_status[user_id + '_' + bot_type]["message"] + message + '\n'
+        user_request_status[user_id + '_' + bot_type]["message"] = message
+        user_request_status[user_id + '_' + bot_type]["update_time"] = time.time()
+        
+        # 等待这一次用户请求的后续消息
+        time.sleep(user_one_request_interval)
+        if message != user_request_status[user_id + '_' + bot_type]["message"]:
+            skip_finally = True
+            return
+        
+        # 更新用户请求状态为处理中
+        user_request_status[user_id + '_' + bot_type]["in_progress"] = True
+        
         # 执行agent并获取结果
-        agent_result = get_agent_result(user_id, message, bot_type)
+        agent_result = get_agent_result(user_id, user_request_status[user_id + '_' + bot_type]["message"], bot_type)
 
         # 发送text结果
         text = agent_result["text"]
@@ -89,12 +112,13 @@ def agent_task_handler(user_id, msg, bot_type):
                     if media_id != '':
                         # 发送media结果
                         send_reply_message(user_id, media_id, ele["media_type"], bot_type)
-                        logger.info(f"Sent Media Message: user_id={user_id}, bot_type={bot_type}, file_path={ele['file_path']}, media_id={ele['media_id']}, media_type={ele['media_type']}")
+                        logger.info(f"Sent Media Message: user_id={user_id}, bot_type={bot_type}, file_path={ele['file_path']}, media_id={media_id}, media_type={ele['media_type']}")
                     else:
                         send_reply_message(user_id, hint_message_dict["upload_no_media"].format(file_name=ele['file_path'].split("/")[-1], media_type_name=msg_type_dict[ele['media_type']]), 'text', bot_type)
                         logger.info(f"Upload Media Failed: user_id={user_id}, bot_type={bot_type}, file_path={ele['file_path']}, media_type={ele['media_type']}")
+                
                 # 不满足文件大小限制
-                if not ele["is_legal"]:
+                else:
                     send_reply_message(user_id, ele["message"], "text", bot_type)
                     logger.info(f"Send File Size Error: user_id={user_id}, bot_type={bot_type}, file_size={ele['file_size']}, file_path={ele['file_path']}, media_type={ele['media_type']}")
             
@@ -105,5 +129,8 @@ def agent_task_handler(user_id, msg, bot_type):
     except:
         logger.error(traceback.format_exc())
     finally:
-        # 本次会话处理结束，删除用户请求状态
-        del user_request_limit[user_id + '_' + bot_type]
+        if skip_finally == False:
+            # 本次会话处理结束，删除用户请求状态，清理数据
+            del user_request_status[user_id + '_' + bot_type]
+            # 清理本次会话输入输出目录和用户临时数据
+            user_data_clean(user_id, bot_type)
