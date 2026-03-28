@@ -56,19 +56,25 @@ def get_opencode_args(user_id, message, bot_type):
         '-v', f'{root_dir}/current_outputs/{bot_type}/{user_id}:/root/workspace/current_outputs'
     ]
 
+    # 时间卷映射参数
+    time_args = [
+        '-v', '/etc/localtime:/etc/localtime:ro',
+        '-v', '/etc/timezone:/etc/timezone:ro'
+    ]
+
     # 配置文件卷映射参数
     config_args = ['-v', f'{root_dir}/opencode.json:/root/workspace/.opencode/opencode.json:ro']
 
-    return network, prompt_args, skills_args, storage_args, assets_args, config_args, env_args, model_dict[bot_type], message
+    return network, prompt_args, skills_args, storage_args, assets_args, time_args, config_args, env_args, model_dict[bot_type], message
 
 
-def run_opencode(network, prompt_args, skills_args, storage_args, assets_args, config_args, env_args, model, message):
+def run_opencode(network, prompt_args, skills_args, storage_args, assets_args, time_args, config_args, env_args, model, message):
     '''
         运行opencode，返回结果
     '''
     command = [
         'docker', 'run', '--rm', '--network', network
-    ] + prompt_args + skills_args + storage_args + assets_args + config_args + env_args + [
+    ] + prompt_args + skills_args + storage_args + assets_args + time_args + config_args + env_args + [
         'tdragon6/opencode:latest', 'run', message,
         '-c', '-m', model,
         '--dir', '/root/workspace',
