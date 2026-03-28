@@ -21,8 +21,8 @@ def get_agent_result(user_id, message, bot_type):
         获取agent的执行结果
     '''
     # 获取opencode执行结果
-    network, prompt_args, skills_args, storage_args, assets_args, config_args, env_args, model, message = get_opencode_args(user_id, message, bot_type)
-    process = run_opencode(network, prompt_args, skills_args, storage_args, assets_args, config_args, env_args, model, message)
+    network, prompt_args, skills_args, storage_args, assets_args, time_args, config_args, env_args, model, message = get_opencode_args(user_id, message, bot_type)
+    process = run_opencode(network, prompt_args, skills_args, storage_args, assets_args, time_args, config_args, env_args, model, message)
     opencode_result = get_opencode_result(process)
 
     result = {
